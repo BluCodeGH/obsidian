@@ -1,7 +1,7 @@
 # obsidian
 Forget the days of old, manually placing and editing command blocks with their terrible UI. Now with mouse support, find and replace, lots of screen real estate and a nice looking UI: your text edior! obsidian is a tool that converts text files with a simple syntax into command block chains in-game, in a matter of cpu cycles (a couple billion of them).
 
-# Usage
+## Usage
 `python obsidian.py myWorld path/to/commands/file.cmds`
 
 `myWorld` should be the name of the internal world folder in your `minecraftWorlds` directory. You can instead specify an entire path pointing to the world folder if it is not in the default location.
@@ -10,7 +10,7 @@ Note: obsidian produces a `.cmds.old` file alongside the specified `.cmds` file.
 
 Note: bedrock (the library this uses to interface with minecraft worlds) requires a leveldb `.dll` or `.so` to be provided alongside it. No gurantees are given as to the state of the included files, so you may want to obtain them for yourself. See https://github.com/BluCodeGH/bedrock for more details.
 
-# Syntax
+## Syntax
 The .cmds file format is a simple one, a text file. Inside this file you can specify one or more chains, which act like normal chains of commands do in-game. The first command block in a chain can be any type, and the following ones are all chain command blocks.
 
 ### Chain Header
@@ -40,7 +40,7 @@ After the start of a chain comes one or more commands, which should be indented 
 ### Comments
 Lines that, when stripped of whitespace, start with `#` are ignore. Lines containing only whitespace are also ignored.
 
-# Example .cmds file
+## Example .cmds file
 ```
 I 0 5 0 +x
   # Start with a needs redstone, impulse command block

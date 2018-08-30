@@ -1,6 +1,12 @@
 # obsidian
 Forget the days of old, manually placing and editing command blocks with their terrible UI. Now with mouse support, find and replace, lots of screen real estate and a nice looking UI: your text edior! obsidian is a tool that converts text files with a simple syntax into command block chains in-game, in a matter of cpu cycles (a couple billion of them).
 
+## Installation
+Simply clone this repository and its submodules.
+```
+git clone --recurse-submodules https://github.com/BluCodeGH/obsidian.git
+```
+
 ## Usage
 `python obsidian.py myWorld path/to/commands/file.cmds`
 

@@ -1,6 +1,7 @@
 import argparse
 import os.path
 import sys
+import json
 import bedrock
 
 parser = argparse.ArgumentParser(description="A CLI for importing text files of commands into Minecraft Bedrock Edition.")
@@ -21,9 +22,12 @@ with open(args.fname) as f:
 
 try:
   with open(args.fname + ".old") as f:
-    oldCmds = f.read()
+    oldCmds = json.load(f)
 except FileNotFoundError:
-  oldCmds = ""
+  oldCmds = []
+except json.decoder.JSONDecodeError:
+  print("Warn: Could not decode {}. Acting like it does not exist.".format(args.fname + ".old"))
+  oldCmds = []
 
 def nextPos(pos, d):
   index = {"u":1,"d":1,"+x":0,"-x":0,"+z":2,"-z":2}[d]
@@ -31,22 +35,25 @@ def nextPos(pos, d):
   pos[index] += direction
 
 with bedrock.World(args.world) as world:
-  for line in oldCmds.splitlines(): # Overwrite old command chains with air, to handle removing commands.
-    if line.strip() == "" or line.strip()[0] == "#":
-      continue
-    if not line.startswith("  "): # Start of a new command chain
-      _, x, y, z, d = line.split(" ")
-      pos = [int(x), int(y), int(z)]
-    else:
-      world.setBlock(*pos, bedrock.Block("minecraft:air")) # Overwrite
+  for pos, d, length in oldCmds: # Remove old command chains
+    for _ in range(length):
+      world.setBlock(*pos, bedrock.Block("minecraft:air"))
       nextPos(pos, d)
 
+  cmdsData = []
   for line in cmds.splitlines():
     if line.strip() == "" or line.strip()[0] == "#":
       continue
     if not line.startswith("  "): # Start of a new command chain
       blockType, x, y, z, d = line.split(" ")
+      if x[0] == "~":
+        x = pos[0] + int(x[1:])
+      if y[0] == "~":
+        y = pos[1] + int(y[1:])
+      if z[0] == "~":
+        z = pos[2] + int(z[1:])
       pos = [int(x), int(y), int(z)]
+      cmdsData.append([pos[:], d, 0])
     else: # Command
       line = line.strip()
       cond = line[0] == "?" or line[:2] == "-?" # commands can start with either - or ? first.
@@ -61,8 +68,9 @@ with bedrock.World(args.world) as world:
       world.setBlock(*pos, commandBlock)
       blockType = "C"
       nextPos(pos, d)
+      cmdsData[-1][2] += 1
 
 with open(args.fname + ".old", "w") as f:
-  f.write(cmds)
+  json.dump(cmdsData, f)
 
 print("Done")

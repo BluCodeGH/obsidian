@@ -34,6 +34,11 @@ def nextPos(pos, d):
   direction = {"u":1,"d":-1,"+x":1,"-x":-1,"+z":1,"-z":-1}[d]
   pos[index] += direction
 
+def prevPos(pos, d):
+  index = {"u":1,"d":1,"+x":0,"-x":0,"+z":2,"-z":2}[d]
+  direction = {"u":1,"d":-1,"+x":1,"-x":-1,"+z":1,"-z":-1}[d]
+  pos[index] -= direction
+
 with bedrock.World(args.world) as world:
   for pos, d, length in oldCmds: # Remove old command chains
     for _ in range(length):
@@ -45,13 +50,23 @@ with bedrock.World(args.world) as world:
     if line.strip() == "" or line.strip()[0] == "#":
       continue
     if not line.startswith("  "): # Start of a new command chain
+      prevPos(pos, d)
       blockType, x, y, z, d = line.split(" ")
       if x[0] == "~":
-        x = pos[0] + int(x[1:])
+        if len(x) > 1:
+          x = pos[0] + int(x[1:])
+        else:
+          x = pos[0]
       if y[0] == "~":
-        y = pos[1] + int(y[1:])
+        if len(y) > 1:
+          y = pos[1] + int(y[1:])
+        else:
+          y = pos[1]
       if z[0] == "~":
-        z = pos[2] + int(z[1:])
+        if len(z) > 1:
+          z = pos[2] + int(z[1:])
+        else:
+          z = pos[2]
       pos = [int(x), int(y), int(z)]
       cmdsData.append([pos[:], d, 0])
     else: # Command
@@ -72,5 +87,3 @@ with bedrock.World(args.world) as world:
 
 with open(args.fname + ".old", "w") as f:
   json.dump(cmdsData, f)
-
-print("Done")

@@ -46,11 +46,13 @@ with bedrock.World(args.world) as world:
       nextPos(pos, d)
 
   cmdsData = []
+  pos = None
   for line in cmds.splitlines():
     if line.strip() == "" or line.strip()[0] == "#":
       continue
-    if not line.startswith("  "): # Start of a new command chain
-      prevPos(pos, d)
+    if not line.startswith("  ") and not line.startswith("\t"): # Start of a new command chain
+      if pos is not None:
+        prevPos(pos, d)
       blockType, x, y, z, d = line.split(" ")
       if x[0] == "~":
         if len(x) > 1:
@@ -73,6 +75,9 @@ with bedrock.World(args.world) as world:
       line = line.strip()
       cond = line[0] == "?" or line[:2] == "-?" # commands can start with either - or ? first.
       redstone = line[0] == "-" or line[:2] == "?-"
+      if blockType == "R" and not redstone:
+        redstone = True
+        print("Warning: Always active on repeating command blocks not supported.")
       line = line.lstrip(" ?-")
       if "|" in line: # hover text and command seperator
         hover, command = line.split("|", 1)

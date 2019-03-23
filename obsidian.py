@@ -46,13 +46,13 @@ with bedrock.World(args.world) as world:
       nextPos(pos, d)
 
   cmdsData = []
-  pos = [None, None, None]
+  pos = []
   d = None
   for i, line in enumerate(cmds.splitlines()):
     if line.strip() == "" or line.strip()[0] == "#":
       continue
     if not line.startswith("  ") and not line.startswith("\t"): # Start of a new command chain
-      if pos is not None:
+      if pos:
         prevPos(pos, d)
       try:
         blockType, x, y, z, d = line.split(" ")

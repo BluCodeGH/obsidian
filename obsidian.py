@@ -30,13 +30,13 @@ except json.decoder.JSONDecodeError:
   oldCmds = []
 
 def nextPos(pos, d):
-  index = {"u":1,"d":1,"+x":0,"-x":0,"+z":2,"-z":2}[d]
-  direction = {"u":1,"d":-1,"+x":1,"-x":-1,"+z":1,"-z":-1}[d]
+  index = {"u":1, "d":1, "+x":0, "-x":0, "+z":2, "-z":2}[d]
+  direction = {"u":1, "d":-1, "+x":1, "-x":-1, "+z":1, "-z":-1}[d]
   pos[index] += direction
 
 def prevPos(pos, d):
-  index = {"u":1,"d":1,"+x":0,"-x":0,"+z":2,"-z":2}[d]
-  direction = {"u":1,"d":-1,"+x":1,"-x":-1,"+z":1,"-z":-1}[d]
+  index = {"u":1, "d":1, "+x":0, "-x":0, "+z":2, "-z":2}[d]
+  direction = {"u":1, "d":-1, "+x":1, "-x":-1, "+z":1, "-z":-1}[d]
   pos[index] -= direction
 
 with bedrock.World(args.world) as world:
@@ -46,14 +46,18 @@ with bedrock.World(args.world) as world:
       nextPos(pos, d)
 
   cmdsData = []
-  pos = None
-  for line in cmds.splitlines():
+  pos = [None, None, None]
+  d = None
+  for i, line in enumerate(cmds.splitlines()):
     if line.strip() == "" or line.strip()[0] == "#":
       continue
     if not line.startswith("  ") and not line.startswith("\t"): # Start of a new command chain
       if pos is not None:
         prevPos(pos, d)
-      blockType, x, y, z, d = line.split(" ")
+      try:
+        blockType, x, y, z, d = line.split(" ")
+      except ValueError:
+        raise ValueError("Invalid header format on line {}".format(i))
       if x[0] == "~":
         if len(x) > 1:
           x = pos[0] + int(x[1:])

@@ -17,11 +17,11 @@ else: # linux
 if not os.path.isabs(args.world):
   args.world = os.path.join(mcWorlds, args.world)
 
-with open(args.fname) as f:
+with open(args.fname, encoding="utf-8") as f:
   cmds = f.read()
 
 try:
-  with open(args.fname + ".old") as f:
+  with open(args.fname + ".old", encoding="utf-8") as f:
     oldCmds = json.load(f)
 except FileNotFoundError:
   oldCmds = []
@@ -94,5 +94,5 @@ with bedrock.World(args.world) as world:
       nextPos(pos, d)
       cmdsData[-1][2] += 1
 
-with open(args.fname + ".old", "w") as f:
+with open(args.fname + ".old", "w", encoding="utf-8") as f:
   json.dump(cmdsData, f)

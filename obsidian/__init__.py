@@ -1,1 +1,1 @@
-from . import obsidian
+from .obsidian import main, run, go

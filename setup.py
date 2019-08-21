@@ -7,5 +7,5 @@ setup(name="obsidian",
       url="https://github.com/BluCodeGH/obsidian",
       packages=["obsidian"],
       install_requires=["bedrock"],
-      dependency_links=["git+https://github.com/BluCodeGH/bedrock/tarball/master#egg=bedrock"],
+      dependency_links=["git+https://github.com/BluCodeGH/bedrock.git#egg=bedrock"],
       author="BluCode")

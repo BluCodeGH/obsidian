@@ -67,36 +67,39 @@ def go(path, cmds, oldCmds):
         cmdsData[-1][2] += 1
   return cmdsData
 
+def run(world, fname):
+  if sys.platform == "win32":
+    mcWorlds = os.path.expanduser("~") + "\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalState\\games\\com.mojang\\minecraftWorlds"
+  else: # linux
+    mcWorlds = os.path.expanduser("~") + "/Minecraft/minecraftWorlds"
+
+  if not os.path.isabs(world):
+    world = os.path.join(mcWorlds, world)
+
+  with open(fname, encoding="utf-8") as f:
+    cmds = f.read()
+
+  try:
+    with open(fname + ".old", encoding="utf-8") as f:
+      oldCmds = json.load(f)
+  except FileNotFoundError:
+    oldCmds = []
+  except json.decoder.JSONDecodeError:
+    print("Warn: Could not decode {}. Acting like it does not exist.".format(fname + ".old"))
+    oldCmds = []
+
+  cmdsData = go(world, cmds, oldCmds)
+
+  with open(fname + ".old", "w", encoding="utf-8") as f:
+    json.dump(cmdsData, f)
+
 def main():
   parser = argparse.ArgumentParser(description="A CLI for importing text files of commands into Minecraft Bedrock Edition.")
   parser.add_argument("world", help="Path to the world folder.")
   parser.add_argument("fname", help="Path to the .cmds file to process.")
   args = parser.parse_args()
 
-  if sys.platform == "win32":
-    mcWorlds = os.path.expanduser("~") + "\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalState\\games\\com.mojang\\minecraftWorlds"
-  else: # linux
-    mcWorlds = os.path.expanduser("~") + "/Minecraft/minecraftWorlds"
-
-  if not os.path.isabs(args.world):
-    args.world = os.path.join(mcWorlds, args.world)
-
-  with open(args.fname, encoding="utf-8") as f:
-    cmds = f.read()
-
-  try:
-    with open(args.fname + ".old", encoding="utf-8") as f:
-      oldCmds = json.load(f)
-  except FileNotFoundError:
-    oldCmds = []
-  except json.decoder.JSONDecodeError:
-    print("Warn: Could not decode {}. Acting like it does not exist.".format(args.fname + ".old"))
-    oldCmds = []
-
-  cmdsData = go(args.world, cmds, oldCmds)
-
-  with open(args.fname + ".old", "w", encoding="utf-8") as f:
-    json.dump(cmdsData, f)
+  run(args.world, args.fname)
 
 if __name__ == '__main__':
   main()

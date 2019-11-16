@@ -6,6 +6,5 @@ setup(name="obsidian",
       keywords="minecraft bedrock commandblock",
       url="https://github.com/BluCodeGH/obsidian",
       packages=["obsidian"],
-      install_requires=["bedrock"],
-      dependency_links=["git+https://github.com/BluCodeGH/bedrock.git#egg=bedrock"],
+      install_requires=["bedrock @ git+https://github.com/BluCodeGH/bedrock.git#egg=bedrock"],
       author="BluCode")

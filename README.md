@@ -2,13 +2,14 @@
 Forget the days of old, manually placing and editing command blocks with their terrible UI. Now with mouse support, find and replace, lots of screen real estate and a nice looking UI: your text edior! obsidian is a tool that converts text files with a simple syntax into command block chains in-game, in a matter of cpu cycles (a couple billion of them).
 
 ## Installation
-Simply clone this repository and its submodules.
+Simply clone this repository and install it.
 ```
-git clone --recurse-submodules https://github.com/BluCodeGH/obsidian.git
+git clone https://github.com/BluCodeGH/obsidian.git
+python -m pip install obsidian
 ```
 
 ## Usage
-`python obsidian.py myWorld path/to/commands/file.cmds`
+`python -m obsidian myWorld path/to/commands/file.cmds`
 
 `myWorld` should be the name of the internal world folder in your `minecraftWorlds` directory. You can instead specify an entire path pointing to the world folder if it is not in the default location.
 

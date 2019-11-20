@@ -1,6 +1,9 @@
 # obsidian
 Forget the days of old, manually placing and editing command blocks with their terrible UI. Now with mouse support, find and replace, lots of screen real estate and a nice looking UI: your text edior! obsidian is a tool that converts text files with a simple syntax into command block chains in-game, in a matter of cpu cycles (a couple billion of them).
 
+## obsidian is provided for non-commercial use
+If you would like to use it commercially, please contact me over discord at `BluCode#8160` and we can certainly work something out.
+
 ## Installation
 Simply clone this repository and install it.
 ```
@@ -15,7 +18,7 @@ python -m pip install obsidian
 
 Note: obsidian produces a `.cmds.old` file alongside the specified `.cmds` file. This file lets it know what to remove before starting, such that if a command chain is shortened the previous blocks are not left behind. This file should be kept with the source `.cmds` file, although it is not crucial and will be created if it does not exist. When distributing a `.cmds` file to others, do not include the `.cmds.old` file, as that file represents the current state of your world, not theirs.
 
-Note: bedrock (the library this uses to interface with minecraft worlds) requires a leveldb `.dll` or `.so` to be provided alongside it. No gurantees are given as to the state of the included files, so you may want to obtain them for yourself. See https://github.com/BluCodeGH/bedrock for more details.
+Note: bedrock (the library this uses to interface with minecraft worlds) requires a leveldb `.dll` or `.so` to be provided alongside it. No guarantees are given as to the state of the included files, so you may want to obtain them for yourself. See https://github.com/BluCodeGH/bedrock for more details.
 
 ## Syntax
 The .cmds file format is a simple one, a text file. Inside this file you can specify one or more chains, which act like normal chains of commands do in-game. The first command block in a chain can be any type, and the following ones are all chain command blocks.
@@ -31,16 +34,20 @@ type x y z direction
 
 `direction` can be one of `u`, `d`, `+x`, `-x`, `+z`, `-z`.
 
-### Command 
+### Command
 After the start of a chain comes one or more commands, which should be indented by two spaces:
 ```
-  [-][?][hover|]command
+  [-][?][[delay[F]|]hover|]command
 ```
 `-` specifies that the command needs redstone.
 
 `?` specifies that the command is conditional. The order of `-` and `?` does not matter.
 
-`hover` is the hover text, and can be empty (for example, when specifying a blank command block, as blank lines are ignored)
+`delay` is the delay for the command block. It is only valid if hover is provided, although hover can be empty.
+
+`F` is the 'execute on first tick' toggle for repeating command blocks. It is only valid if delay is provided.
+
+`hover` is the hover text, and can be empty (for example, when specifying a blank command block, as blank lines are ignored).
 
 `command` is a minecraft command, and can also be empty (see above). Prefixing the command with `/` is optional and not recommended.
 
